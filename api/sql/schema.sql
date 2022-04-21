@@ -7,7 +7,7 @@ create table if not exists "User"
     last_name  varchar(40) not null,
     email      varchar(80) not null,
     password   varchar(20) not null,
-    phone      integer     not null,
+    phone      varchar(11) not null,
     "isAdmin"  boolean     not null
 );
 
@@ -41,7 +41,7 @@ create table if not exists "Driver"
     id              integer     not null
         constraint driver_pk
             primary key,
-    "licenseNumber" varchar(7)  not null,
+    "licenseNumber" varchar(9)  not null,
     "userId"        integer     not null
         constraint "userId"
             references "User",
