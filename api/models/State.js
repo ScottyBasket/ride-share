@@ -24,32 +24,61 @@ class Vehicle extends Model {
     }
 }
 
+class Driver extends Model {
+    static get tableName() {
+        return 'Driver';
+    }
+}
+
 class State extends Model {
     static get tableName() {
         return 'State';
     }
     static get relationMappings() {
-        return {
-            Location: {
-                relation: Model.HasManyRelation,
-                modelClass: State,
-                join: {
-                    from: 'State.abbreviation',
-                    to: 'Location.state'
+            return {
+                Location: {
+                    relation: Model.HasManyRelation,
+                    modelClass: Location,
+                    join: {
+                        from: 'State.abbreviation',
+                        to: 'Location.state'
+                    }
                 }
-            }
-        };
-    }
+            };
+        }
+        /* static get relationMappings() {
+             return {
+                 Vehicle: {
+                     relation: Model.HasManyRelation,
+                     modelClass: Vehicle,
+                     join: {
+                         from: 'State.abbreviation',
+                         to: 'Vehicle.licenseState'
+                     }
+                 }
+             };
+         }
+         
     static get relationMappings() {
         return {
-            Vehicle: {
+            Driver: {
                 relation: Model.HasManyRelation,
-                modelClass: State,
+                modelClass: Driver,
                 join: {
                     from: 'State.abbreviation',
-                    to: 'Vehicle.licenseState'
+                    to: 'Driver.licenseState'
                 }
             }
         };
     }
+    */
 }
+
+State.query()
+    .where('abbreviation', 'NY')
+    .first()
+    .then(State => {
+        console.log(State);
+        return State.$relatedQuery('Location');
+    })
+    .then(Location => console.log(Location)).catch(error => console.log(error.message));

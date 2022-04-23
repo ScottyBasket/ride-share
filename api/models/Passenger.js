@@ -12,9 +12,15 @@ objection = require('objection');
 const Model = objection.Model;
 Model.knex(knex);
 
-class Driver extends Model {
+class User extends Model {
   static get tableName() {
-    return 'Driver';
+    return 'User';
+  }
+}
+
+class Ride extends Model {
+  static get tableName() {
+    return 'Ride';
   }
 }
 
@@ -22,52 +28,44 @@ class Passenger extends Model {
   static get tableName() {
     return 'Passenger';
   }
-}
-
-class User extends Model {
-  static get tableName() {
-    return 'User';
-  }
-  static get relationMappings() {
-    return {
-      drivers: {
-        relation: Model.HasManyRelation,
-        modelClass: Driver,
-        join: {
-          from: 'User.id',
-          to: 'Driver.userId'
-        }
-      }
-    };
-  }
   /*
   static get relationMappings() {
     return {
-      passengers: {
-        relation: Model.HasManyRelation,
-        modelClass: Passenger,
+      users: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: User,
         join: {
-          from: 'User.id',
-          to: 'Passenger.userId'
+          from: 'Passenger.userId',
+          to: 'User.id'
         }
       }
-    };
+    }
   }
   */
+  static get relationMappings() {
+    return {
+      rides: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Ride,
+        join: {
+          from: 'Passenger.rideId',
+          to: 'Ride.id'
+        }
+      }
+    }
+  }
 }
 
-User.query()
-  .withGraphFetched('drivers')
-  .where('id', 1)
+Passenger.query()
+  .withGraphFetched('users')
+  .where('userId', 2)
   .first()
   .then(user => console.log(user))
   .catch(error => console.log(error.message));
 
-/*
-User.query()
-  .withGraphFetched('passengers')
-  .where('id', 2)
+Passenger.query()
+  .withGraphFetched('rides')
+  .where('rideId', 1)
   .first()
   .then(user => console.log(user))
   .catch(error => console.log(error.message));
-*/

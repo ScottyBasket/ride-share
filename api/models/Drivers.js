@@ -18,56 +18,58 @@ class Driver extends Model {
   }
 }
 
-class Passenger extends Model {
+class Ride extends Model {
   static get tableName() {
-    return 'Passenger';
+    return 'Ride';
   }
 }
 
-class User extends Model {
+class Drivers extends Model {
   static get tableName() {
-    return 'User';
+    return 'Drivers';
   }
-  static get relationMappings() {
-    return {
-      drivers: {
-        relation: Model.HasManyRelation,
-        modelClass: Driver,
-        join: {
-          from: 'User.id',
-          to: 'Driver.userId'
-        }
-      }
-    };
-  }
+
   /*
   static get relationMappings() {
     return {
-      passengers: {
-        relation: Model.HasManyRelation,
-        modelClass: Passenger,
+      driverS: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Driver,
         join: {
-          from: 'User.id',
-          to: 'Passenger.userId'
+          from: 'Drivers.driverId',
+          to: 'Driver.id'
         }
       }
-    };
+    }
   }
   */
+
+  static get relationMappings() {
+    return {
+      rides: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Ride,
+        join: {
+          from: 'Drivers.rideId',
+          to: 'Ride.id'
+        }
+      }
+    }
+  }
 }
 
-User.query()
-  .withGraphFetched('drivers')
-  .where('id', 1)
-  .first()
-  .then(user => console.log(user))
-  .catch(error => console.log(error.message));
-
 /*
-User.query()
-  .withGraphFetched('passengers')
-  .where('id', 2)
+Drivers.query()
+  .withGraphFetched('driverS')
+  .where('driverId', 1)
   .first()
   .then(user => console.log(user))
   .catch(error => console.log(error.message));
 */
+
+Drivers.query()
+  .withGraphFetched('rides')
+  .where('rideId', 1)
+  .first()
+  .then(user => console.log(user))
+  .catch(error => console.log(error.message));
