@@ -13,19 +13,19 @@ const Model = objection.Model;
 Model.knex(knex);
 
 
-class VehicleType extends Model {
-    static get tableName() {
-        return 'VehicleType';
-    }
-}
-
 class Vehicle extends Model {
     static get tableName() {
         return 'Vehicle';
     }
+}
+
+class VehicleType extends Model {
+    static get tableName() {
+        return 'VehicleType';
+    }
     static get relationMappings() {
         return {
-            VehicleType: {
+            vehicles: {
                 relation: Model.HasManyRelation,
                 modelClass: Vehicle,
                 join: {
@@ -38,7 +38,7 @@ class Vehicle extends Model {
 }
 
 VehicleType.query()
-    .withGraphFetched('Vehicle')
-    .where('VehicleType', 1)
+    .withGraphFetched('vehicles')
+    .where('id', 1)
     .first()
     .then(VehicleType => console.log(VehicleType)).catch(error => console.log(error.message));
