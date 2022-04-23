@@ -14,7 +14,7 @@ create table if not exists "User"
 alter table "User"
     owner to eli_bassett;
 
-create table if not exists "Vehicle Type"
+create table "VehicleType"
 (
     id   integer     not null
         constraint "vehicle type_pk"
@@ -22,8 +22,9 @@ create table if not exists "Vehicle Type"
     type varchar(10) not null
 );
 
-alter table "Vehicle Type"
+alter table "VehicleType"
     owner to eli_bassett;
+
 
 create table if not exists "State"
 (
