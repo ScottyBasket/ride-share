@@ -68,7 +68,7 @@ class Vehicle extends Model {
     static get relationMappings() {
         return {
             VehicleTypes: {
-                relation: Model.HasManyRelation,
+                relation: Model.BelongsToOneRelation,
                 modelClass: VehicleType,
                 join: {
                     from: 'Vehicle.vehicleTypeId',
@@ -81,7 +81,7 @@ class Vehicle extends Model {
     static get relationMappings() {
         return {
             States: {
-                relation: Model.HasManyRelation,
+                relation: Model.BelongsToOneRelation,
                 modelClass: State,
                 join: {
                     from: 'Vehicle.licenseState',
