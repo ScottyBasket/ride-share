@@ -28,7 +28,7 @@ class Passenger extends Model {
   static get tableName() {
     return 'Passenger';
   }
-  /*
+
   static get relationMappings() {
     return {
       users: {
@@ -38,12 +38,7 @@ class Passenger extends Model {
           from: 'Passenger.userId',
           to: 'User.id'
         }
-      }
-    }
-  }
-  */
-  static get relationMappings() {
-    return {
+      },
       rides: {
         relation: Model.BelongsToOneRelation,
         modelClass: Ride,

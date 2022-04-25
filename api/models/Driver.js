@@ -43,7 +43,6 @@ class Driver extends Model {
   static get tableName() {
     return 'Driver';
   }
-  /*
   static get relationMappings() {
     return {
       users: {
@@ -53,12 +52,7 @@ class Driver extends Model {
           from: 'Driver.userId',
           to: 'User.id'
         }
-      }
-    }
-  }
-  *//*
-  static get relationMappings() {
-    return {
+      },
       states: {
         relation: Model.BelongsToOneRelation,
         modelClass: State,
@@ -66,12 +60,7 @@ class Driver extends Model {
           from: 'Driver.licenseState',
           to: 'State.abbreviation'
         }
-      }
-    }
-  }
-
-  static get relationMappings() {
-    return {
+      },
       authorizations: {
         relation: Model.HasManyRelation,
         modelClass: Authorization,
@@ -79,12 +68,7 @@ class Driver extends Model {
           from: 'Driver.id',
           to: 'Authorization.driverId'
         }
-      }
-    }
-  }
-  */
-  static get relationMappings() {
-    return {
+      },
       driverS: {
         relation: Model.HasManyRelation,
         modelClass: Drivers,
@@ -97,30 +81,27 @@ class Driver extends Model {
   }
 }
 
-/*
 Driver.query()
   .withGraphFetched('users')
   .where('userId', 1)
   .first()
   .then(user => console.log(user))
   .catch(error => console.log(error.message));
-*/
-/*
+
 Driver.query()
   .withGraphFetched('states')
   .where('licenseState', 'NY')
   .first()
   .then(user => console.log(user))
   .catch(error => console.log(error.message));
-*/
-/*
+
 Driver.query()
   .withGraphFetched('authorizations')
   .where('id', 1)
   .first()
   .then(user => console.log(user))
   .catch(error => console.log(error.message));
-*/
+
 Driver.query()
   .withGraphFetched('driverS')
   .where('id', 1)
