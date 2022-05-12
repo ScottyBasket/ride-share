@@ -1,11 +1,11 @@
 const knex = require('knex')({
-  client: 'pg',
-  connection: {
-    host: 'pg.cse.taylor.edu',
-    user: 'eli_bassett',
-    password: 'kecoseli',
-    database: 'eli_bassett'
-  }
+    client: 'pg',
+    connection: {
+        host: 'pg.cse.taylor.edu',
+        user: 'eli_bassett',
+        password: 'kecoseli',
+        database: 'eli_bassett'
+    }
 });
 
 objection = require('objection');
