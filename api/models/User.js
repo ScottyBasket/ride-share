@@ -37,12 +37,7 @@ class User extends Model {
           from: 'User.id',
           to: 'Driver.userId'
         }
-      }
-    };
-  }
-  /*
-  static get relationMappings() {
-    return {
+      },
       passengers: {
         relation: Model.HasManyRelation,
         modelClass: Passenger,
@@ -51,9 +46,8 @@ class User extends Model {
           to: 'Passenger.userId'
         }
       }
-    };
+    }
   }
-  */
 }
 
 User.query()
@@ -63,11 +57,10 @@ User.query()
   .then(user => console.log(user))
   .catch(error => console.log(error.message));
 
-/*
 User.query()
   .withGraphFetched('passengers')
   .where('id', 2)
   .first()
   .then(user => console.log(user))
   .catch(error => console.log(error.message));
-*/
+  

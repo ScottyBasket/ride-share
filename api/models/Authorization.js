@@ -28,7 +28,7 @@ class Authorization extends Model {
   static get tableName() {
     return 'Authorization';
   }
-/*
+
   static get relationMappings() {
     return {
       vehicles: {
@@ -38,12 +38,7 @@ class Authorization extends Model {
           from: 'Authorization.vehicleId',
           to: 'Vehicle.id'
         }
-      }
-    }
-  }
-*/
-  static get relationMappings() {
-    return {
+      },
       drivers: {
         relation: Model.BelongsToOneRelation,
         modelClass: Driver,
@@ -56,14 +51,12 @@ class Authorization extends Model {
   }
 }
 
-/*
 Authorization.query()
   .withGraphFetched('vehicles')
   .where('vehicleId', 1)
   .first()
   .then(user => console.log(user))
   .catch(error => console.log(error.message));
-*/
 
 Authorization.query()
   .withGraphFetched('drivers')

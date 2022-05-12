@@ -29,7 +29,6 @@ class Drivers extends Model {
     return 'Drivers';
   }
 
-  /*
   static get relationMappings() {
     return {
       driverS: {
@@ -39,13 +38,7 @@ class Drivers extends Model {
           from: 'Drivers.driverId',
           to: 'Driver.id'
         }
-      }
-    }
-  }
-  */
-
-  static get relationMappings() {
-    return {
+      },
       rides: {
         relation: Model.BelongsToOneRelation,
         modelClass: Ride,
@@ -58,14 +51,12 @@ class Drivers extends Model {
   }
 }
 
-/*
 Drivers.query()
   .withGraphFetched('driverS')
   .where('driverId', 1)
   .first()
   .then(user => console.log(user))
   .catch(error => console.log(error.message));
-*/
 
 Drivers.query()
   .withGraphFetched('rides')
