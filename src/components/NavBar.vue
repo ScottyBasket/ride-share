@@ -2,7 +2,7 @@
   <v-app-bar app dark color="primary">
     <router-link v-bind:to="{ name: 'home-page' }">
       <v-toolbar-title class="white--text">
-        Single Page App
+        Ride Share
       </v-toolbar-title>
     </router-link>
 
@@ -14,9 +14,9 @@
     <v-btn v-if="!isLoggedIn" text v-bind:to="{ name: 'sign-in' }">
       Sign In
     </v-btn>
-    <v-btn v-if="!isLoggedIn" text v-bind:to="{ name: 'reset-password' }">
+    <!-- <v-btn v-if="!isLoggedIn" text v-bind:to="{ name: 'reset-password' }">
       Reset Password
-    </v-btn>
+    </v-btn> -->
     <v-btn text v-bind:to="{ name: 'about-us' }">About Us</v-btn>
 
 
@@ -32,6 +32,12 @@
       <v-list>
         <v-list-item v-bind:to="{ name: 'accounts' }">
           <v-list-item-title>Accounts</v-list-item-title>
+        </v-list-item>
+
+        <v-divider></v-divider>
+
+        <v-list-item v-bind:to="{ name: 'vehicles' }">
+          <v-list-item-title>Vehicles</v-list-item-title>
         </v-list-item>
 
         <v-divider></v-divider>

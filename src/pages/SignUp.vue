@@ -3,7 +3,7 @@
     <div>
       <h4 class="display-1">Sign Up</h4>
 
-      <instructions details="Sign up for our nifty site." />
+      <instructions details="Sign up to become a user." />
 
       <v-form v-model="valid">
         <v-text-field
@@ -33,6 +33,11 @@
           required
         >
         </v-text-field>
+        <v-text-field
+          v-model="newMember.phoneNumber"
+          v-bind:rules="rules.phone"
+          label="Phone number"
+        ></v-text-field>
         <v-btn v-bind:disabled="!valid" v-on:click="handleSubmit"
           >Sign Up
         </v-btn>
@@ -80,10 +85,11 @@ export default {
         lastName: "",
         email: "",
         password: "",
+        phoneNumber: "",
       },
 
       // Was an account created successfully?
-      accountCreated: false,
+      userCreated: false,
 
       // Data to be displayed by the dialog.
       dialogHeader: "<no dialogHeader>",
@@ -107,6 +113,7 @@ export default {
           (val) => /\d/.test(val) || "Need digit",
           (val) => val.length >= 8 || "Minimum 8 characters",
         ],
+        phone: [(val) => val.length == 11 || "Needs to be 11 digits"],
       },
     };
   },
@@ -114,22 +121,23 @@ export default {
     // Invoked when the user clicks the 'Sign Up' button.
     handleSubmit: function () {
       // Haven't been successful yet.
-      this.accountCreated = false;
+      this.userCreated = false;
 
       // Post the content of the form to the Hapi server.
       this.$axios
-        .post("/accounts", {
+        .post("/users", {
           firstName: this.newMember.firstName,
           lastName: this.newMember.lastName,
           email: this.newMember.email,
           password: this.newMember.password,
+          phoneNumber: this.newMember.phoneNumber,
         })
         .then((result) => {
           // Based on whether things worked or not, show the
           // appropriate dialog.
           if (result.data.ok) {
             this.showDialog("Success", result.data.msge);
-            this.accountCreated = true;
+            this.userCreated = true;
           } else {
             this.showDialog("Sorry", result.data.msge);
           }
@@ -148,9 +156,9 @@ export default {
     // and navigate to the home page.
     hideDialog: function () {
       this.dialogVisible = false;
-      if (this.accountCreated) {
+      if (this.userCreated) {
         // Only navigate away from the sign-up page if we were successful.
-        this.$router.push({ name: "home-page" });
+        this.$router.push({ name: "sign-in" });
       }
     },
   },

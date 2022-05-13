@@ -14,7 +14,8 @@ const objection = require("objection");
 objection.Model.knex(knex);
 
 // Models
-const Account = require("./models/Account");
+const User = require("./models/User");
+const Vehicle = require("./models/Vehicle");
 
 // Hapi
 const Joi = require("@hapi/joi"); // Input validation
@@ -43,45 +44,48 @@ async function init() {
     // Configure routes.
     server.route([{
             method: "POST",
-            path: "/accounts",
+            path: "/users",
             config: {
-                description: "Sign up for an account",
+                description: "Sign up to be a user",
                 validate: {
                     payload: Joi.object({
                         firstName: Joi.string().required(),
                         lastName: Joi.string().required(),
                         email: Joi.string().email().required(),
-                        password: Joi.string().required(),
+                        password: Joi.string().min(8).required(),
+                        phoneNumber: Joi.string().required(),
                     }),
                 },
             },
             handler: async(request, h) => {
-                const existingAccount = await Account.query()
+                const existingAccount = await User.query()
                     .where("email", request.payload.email)
                     .first();
                 if (existingAccount) {
                     return {
                         ok: false,
-                        msge: `Account with email '${request.payload.email}' is already in use`,
+                        msge: `User with email '${request.payload.email}' is already in use`,
                     };
                 }
 
-                const newAccount = await Account.query().insert({
+                const newAccount = await User.query().insert({
                     first_name: request.payload.firstName,
                     last_name: request.payload.lastName,
                     email: request.payload.email,
                     password: request.payload.password,
+                    phone: request.payload.phoneNumber,
+                    isAdmin: false,
                 });
 
                 if (newAccount) {
                     return {
                         ok: true,
-                        msge: `Created account '${request.payload.email}'`,
+                        msge: `Created user '${request.payload.email}'`,
                     };
                 } else {
                     return {
                         ok: false,
-                        msge: `Couldn't create account with email '${request.payload.email}'`,
+                        msge: `Couldn't create user with email '${request.payload.email}'`,
                     };
                 }
             },
@@ -94,7 +98,18 @@ async function init() {
                 description: "Retrieve all accounts",
             },
             handler: (request, h) => {
-                return Account.query();
+                return User.query();
+            },
+        },
+
+        {
+            method: "GET",
+            path: "/vehicles",
+            config: {
+                description: "Retrieve all vehicles",
+            },
+            handler: (request, h) => {
+                return Vehicle.query();
             },
         },
 
@@ -105,7 +120,7 @@ async function init() {
                 description: "Delete an account",
             },
             handler: (request, h) => {
-                return Account.query()
+                return User.query()
                     .deleteById(request.params.id)
                     .then((rowsDeleted) => {
                         if (rowsDeleted === 1) {
@@ -117,6 +132,31 @@ async function init() {
                             return {
                                 ok: false,
                                 msge: `Couldn't delete account with ID '${request.params.id}'`,
+                            };
+                        }
+                    });
+            },
+        },
+
+        {
+            method: "DELETE",
+            path: "/vehicles/{id}",
+            config: {
+                description: "Delete a vehicle",
+            },
+            handler: (request, h) => {
+                return Vehicle.query()
+                    .deleteById(request.params.id)
+                    .then((rowsDeleted) => {
+                        if (rowsDeleted === 1) {
+                            return {
+                                ok: true,
+                                msge: `Deleted vehicle with ID '${request.params.id}'`,
+                            };
+                        } else {
+                            return {
+                                ok: false,
+                                msge: `Couldn't delete vehicle with ID '${request.params.id}'`,
                             };
                         }
                     });
@@ -136,7 +176,7 @@ async function init() {
                 },
             },
             handler: async(request, h) => {
-                const account = await Account.query()
+                const account = await User.query()
                     .where("email", request.payload.email)
                     .first();
                 if (
