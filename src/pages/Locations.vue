@@ -16,7 +16,7 @@
             <td>{{ item.zipCode }}</td>
             <td>{{ item.state }}</td>
             <td>
-              <v-icon small @click="deleteLocations(item)">
+              <v-icon small @click="deleteAccount(item)">
                 mdi-delete
               </v-icon>
               <v-icon small class="ml-2" @click="updateLocations(item)">
@@ -50,7 +50,7 @@ export default {
         { text: "Zip Code", value: "zipCode" },
         { text: "State", value: "state" }
       ],
-      Locations: [],
+      locations: [],
 
       snackbar: {
         show: false,
@@ -61,7 +61,7 @@ export default {
 
   mounted: function() {
     this.$axios.get("/locations").then(response => {
-      this.locations = response.data.map(locations => ({
+      this.location = response.data.map(locations => ({
         name: locations.name,
         address: locations.address,
         city: locations.city,
@@ -80,9 +80,9 @@ export default {
 
     // Calculate the CSS class for an item
     itemClass(item) {
-      const currentLocations = this.$store.state.currentLocations;
-      if (currentLocations && currentLocations.id === item.id) {
-        return "currentLocations";
+      const currentLocation = this.$store.state.currentLocation;
+      if (currentLocation && currentLocation.id === item.id) {
+        return "currentLocation";
       }
     },
 
@@ -93,13 +93,13 @@ export default {
     },
 
     // Delete an account.
-    deleteLocations(item) {
+    delete(item) {
       this.$axios.delete(`/locations/${item.id}`).then(response => {
         if (response.data.ok) {
           // The delete operation worked on the server; delete the local account
           // by filtering the deleted account from the list of accounts.
-          this.locations = this.locations.filter(
-            locations => locations.id !== item.id
+          this.location = this.location.filter(
+            location => location.id !== item.id
           );
         }
       });
@@ -109,7 +109,7 @@ export default {
 </script>
 
 <style>
-.currentLocations {
+.currentLocation {
   background: lightcoral;
 }
 </style>

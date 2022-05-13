@@ -81,9 +81,11 @@ Location.query()
     .then(Ride => console.log(Ride))
     .catch(error => console.log(error.message));
 */
-Location.query()
-    .withGraphFetched('Ridess')
-    .where('id', 1)
-    .first()
-    .then(Ride => console.log(Ride))
-    .catch(error => console.log(error.message));
+// Location.query()
+//     .withGraphFetched('Ridess')
+//     .where('id', 1)
+//     .first()
+//     .then(Ride => console.log(Ride))
+//     .catch(error => console.log(error.message));
+
+module.exports = Location;

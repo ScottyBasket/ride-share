@@ -182,7 +182,7 @@ async function init() {
                 description: "Delete a location",
             },
             handler: (request, h) => {
-                return Location.query()
+                return Locations.query()
                     .deleteById(request.params.id)
                     .then((rowsDeleted) => {
                         if (rowsDeleted === 1) {
