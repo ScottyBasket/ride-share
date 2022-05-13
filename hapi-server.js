@@ -16,6 +16,7 @@ objection.Model.knex(knex);
 // Models
 const User = require("./models/User");
 const Vehicle = require("./models/Vehicle");
+const Location = require("./models/Location");
 
 // Hapi
 const Joi = require("@hapi/joi"); // Input validation
@@ -114,6 +115,17 @@ async function init() {
         },
 
         {
+            method: "GET",
+            path: "/locations",
+            config: {
+                description: "Retrieve all locations",
+            },
+            handler: (request, h) => {
+                return Location.query();
+            },
+        },
+
+        {
             method: "DELETE",
             path: "/accounts/{id}",
             config: {
@@ -157,6 +169,31 @@ async function init() {
                             return {
                                 ok: false,
                                 msge: `Couldn't delete vehicle with ID '${request.params.id}'`,
+                            };
+                        }
+                    });
+            },
+        },
+
+        {
+            method: "DELETE",
+            path: "/locations/{id}",
+            config: {
+                description: "Delete a location",
+            },
+            handler: (request, h) => {
+                return Location.query()
+                    .deleteById(request.params.id)
+                    .then((rowsDeleted) => {
+                        if (rowsDeleted === 1) {
+                            return {
+                                ok: true,
+                                msge: `Deleted location with ID '${request.params.id}'`,
+                            };
+                        } else {
+                            return {
+                                ok: false,
+                                msge: `Couldn't delete location with ID '${request.params.id}'`,
                             };
                         }
                     });

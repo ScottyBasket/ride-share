@@ -42,6 +42,12 @@
 
         <v-divider></v-divider>
 
+        <v-list-item v-bind:to="{ name: 'locations' }">
+          <v-list-item-title>Locations</v-list-item-title>
+        </v-list-item>
+
+        <v-divider></v-divider>
+
         <v-list-item @click="signOut">
           <v-list-item-title>Sign Out</v-list-item-title>
         </v-list-item>
