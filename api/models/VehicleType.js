@@ -37,8 +37,8 @@ class VehicleType extends Model {
     }
 }
 
-VehicleType.query()
-    .withGraphFetched('vehicles')
-    .where('id', 1)
-    .first()
-    .then(VehicleType => console.log(VehicleType)).catch(error => console.log(error.message));
+// VehicleType.query()
+//     .withGraphFetched('vehicles')
+//     .where('id', 1)
+//     .first()
+//     .then(VehicleType => console.log(VehicleType)).catch(error => console.log(error.message));

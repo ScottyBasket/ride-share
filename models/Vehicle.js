@@ -12,77 +12,43 @@ objection = require('objection');
 const Model = objection.Model;
 Model.knex(knex);
 
-class VehicleType extends Model {
-    static get tableName() {
-        return 'VehicleType';
-    }
-}
-
-class Authorization extends Model {
-    static get tableName() {
-        return 'Authorization';
-    }
-}
-
-class State extends Model {
-    static get tableName() {
-        return 'State';
-    }
-}
-
-class Ride extends Model {
-    static get tableName() {
-        return 'Ride';
-    }
-}
-
 class Vehicle extends Model {
     static get tableName() {
         return 'Vehicle';
     }
     static get relationMappings() {
         return {
-            rides: {
+            ride: {
                 relation: Model.HasManyRelation,
-                modelClass: Ride,
+                modelClass: __dirname + "/Ride",
                 join: {
                     from: 'Vehicle.id',
                     to: 'Ride.vehicleId'
                 }
-            }
-        };
-    }
-    //This function needs to be changed to acknowledge that the Authorization table is a joint table
-    static get relationMappings() {
-        return {
-            Authorizations: {
-                relation: Model.HasManyRelation,
-                modelClass: Authorization,
+            },
+            driver: {
+                relation: Model.ManyToManyRelation,
+                modelClass: __dirname + "/Driver",
                 join: {
-                    from: 'Vehicle.id',
+                  from: 'Vehicle.id',
+                  through: {
+                    from: 'Authorization.driverId',
                     to: 'Authorization.vehicleId'
-                }
-            }
-        };
-    }
-    static get relationMappings() {
-        return {
-            VehicleTypes: {
+                  },
+                  to: 'Driver.id'
+              }
+            },
+            vehicleTypes: {
                 relation: Model.BelongsToOneRelation,
-                modelClass: VehicleType,
+                modelClass: __dirname + "/VehicleType",
                 join: {
                     from: 'Vehicle.vehicleTypeId',
                     to: 'VehicleType.id'
                 }
-            }
-        }
-    }
-
-    static get relationMappings() {
-        return {
-            States: {
+            },
+            state: {
                 relation: Model.BelongsToOneRelation,
-                modelClass: State,
+                modelClass: __dirname + "/State",
                 join: {
                     from: 'Vehicle.licenseState',
                     to: 'State.abbreviation'
@@ -92,5 +58,6 @@ class Vehicle extends Model {
     }
 
 }
+
 
 module.exports = Vehicle;

@@ -44,30 +44,30 @@ class Ride extends Model {
 
     static get relationMappings() {
         return {
-            Driveres: {
-                relation: Model.HasManyRelation,
-                modelClass: Drivers,
+            driver: {
+                relation: Model.ManyToManyRelation,
+                modelClass: __dirname + "/Driver",
                 join: {
-                    from: 'Ride.id',
+                  from: 'Ride.id',
+                  through: {
+                    from: 'Drivers.driverId',
                     to: 'Drivers.rideId'
-                }
-            }
-        };
-    }
-    static get relationMappings() {
-        return {
-            Passengeres: {
-                relation: Model.HasManyRelation,
-                modelClass: Passenger,
+                  },
+                  to: 'Driver.id'
+              }
+            },
+            user: {
+                relation: Model.ManyToManyRelation,
+                modelClass: __dirname + "/User",
                 join: {
-                    from: 'Ride.id',
+                  from: 'Ride.id',
+                  through: {
+                    from: 'Passenger.userId',
                     to: 'Passenger.rideId'
-                }
-            }
-        };
-    }
-    static get relationMappings() {
-        return {
+                  },
+                  to: 'User.id'
+              }
+            },
             vehicles: {
                 relation: Model.BelongsToOneRelation,
                 modelClass: Vehicle,
@@ -75,24 +75,16 @@ class Ride extends Model {
                     from: 'Ride.vehicleId',
                     to: 'Vehicle.id'
                 }
-            }
-        }
-    }
-    static get relationMappings() {
-        return {
-            Locationes: {
+            },
+            locations: {
                 relation: Model.BelongsToOneRelation,
                 modelClass: Location,
                 join: {
                     from: 'Ride.fromLocation',
                     to: 'Location.id'
                 }
-            }
-        }
-    }
-    static get relationMappings() {
-        return {
-            Locationess: {
+            },
+            Locations: {
                 relation: Model.BelongsToOneRelation,
                 modelClass: Location,
                 join: {
@@ -103,40 +95,40 @@ class Ride extends Model {
         }
     }
 }
-/*
-Ride.query()
-    .withGraphFetched('Driveres')
-    .where('id', 1)
-    .first()
-    .then(Drivers => console.log(Drivers))
-    .catch(error => console.log(error.message));
 
-
-Ride.query()
-    .withGraphFetched('Passengeres')
-    .where('id', 1)
-    .first()
-    .then(Passenger => console.log(Passenger))
-    .catch(error => console.log(error.message));
-
-
-Ride.query()
-    .withGraphFetched('vehicles')
-    .where('id', 1)
-    .first()
-    .then(Vehicle => console.log(Vehicle))
-    .catch(error => console.log(error.message));
-
-Ride.query()
-    .withGraphFetched('Locationes')
-    .where('id', 1)
-    .first()
-    .then(Location => console.log(Location))
-    .catch(error => console.log(error.message));
-*/
-Ride.query()
-    .withGraphFetched('Locationess')
-    .where('id', 1)
-    .first()
-    .then(Location => console.log(Location))
-    .catch(error => console.log(error.message));
+// Ride.query()
+//     .withGraphFetched('Driveres')
+//     .where('id', 1)
+//     .first()
+//     .then(Drivers => console.log(Drivers))
+//     .catch(error => console.log(error.message));
+//
+//
+// Ride.query()
+//     .withGraphFetched('Passengeres')
+//     .where('id', 1)
+//     .first()
+//     .then(Passenger => console.log(Passenger))
+//     .catch(error => console.log(error.message));
+//
+//
+// Ride.query()
+//     .withGraphFetched('vehicles')
+//     .where('id', 1)
+//     .first()
+//     .then(Vehicle => console.log(Vehicle))
+//     .catch(error => console.log(error.message));
+//
+// Ride.query()
+//     .withGraphFetched('Locationes')
+//     .where('id', 1)
+//     .first()
+//     .then(Location => console.log(Location))
+//     .catch(error => console.log(error.message));
+//
+// Ride.query()
+//     .withGraphFetched('driver')
+//     .where('id', 1)
+//     .first()
+//     .then(Location => console.log(Location))
+//     .catch(error => console.log(error.message));

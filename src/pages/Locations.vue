@@ -16,7 +16,7 @@
             <td>{{ item.zipCode }}</td>
             <td>{{ item.state }}</td>
             <td>
-              <v-icon small @click="deleteAccount(item)">
+              <v-icon small @click="deleteLocations(item)">
                 mdi-delete
               </v-icon>
               <v-icon small class="ml-2" @click="updateLocations(item)">
@@ -61,7 +61,8 @@ export default {
 
   mounted: function() {
     this.$axios.get("/locations").then(response => {
-      this.location = response.data.map(locations => ({
+      this.locations = response.data.map(locations => ({
+        id: locations.id,
         name: locations.name,
         address: locations.address,
         city: locations.city,
@@ -86,20 +87,20 @@ export default {
       }
     },
 
-    // Update account information.
+    // Update location information.
     updateLocations(item) {
       console.log("UPDATE", JSON.stringify(item, null, 2));
       this.showSnackbar("Sorry, update is not yet implemented.");
     },
 
-    // Delete an account.
-    delete(item) {
+    // Delete a location.
+    deleteLocations(item) {
       this.$axios.delete(`/locations/${item.id}`).then(response => {
         if (response.data.ok) {
-          // The delete operation worked on the server; delete the local account
-          // by filtering the deleted account from the list of accounts.
-          this.location = this.location.filter(
-            location => location.id !== item.id
+          // The delete operation worked on the server; delete the local location
+          // by filtering the deleted location from the list of locations.
+          this.locations = this.locations.filter(
+            locations => locations.id !== item.id
           );
         }
       });

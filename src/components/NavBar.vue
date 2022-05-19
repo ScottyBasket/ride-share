@@ -42,8 +42,32 @@
 
         <v-divider></v-divider>
 
+        <v-list-item v-bind:to="{ name: 'vehicle-type' }">
+          <v-list-item-title>Vehicle Type</v-list-item-title>
+        </v-list-item>
+
+        <v-divider></v-divider>
+
+        <v-list-item v-bind:to="{ name: 'rides' }">
+          <v-list-item-title>Rides</v-list-item-title>
+        </v-list-item>
+
+        <v-divider></v-divider>
+
         <v-list-item v-bind:to="{ name: 'locations' }">
           <v-list-item-title>Locations</v-list-item-title>
+        </v-list-item>
+
+        <v-divider></v-divider>
+
+        <v-list-item v-bind:to="{ name: 'drivers' }">
+          <v-list-item-title>Drivers</v-list-item-title>
+        </v-list-item>
+
+        <v-divider></v-divider>
+
+        <v-list-item v-bind:to="{ name: 'passengers' }">
+          <v-list-item-title>Passengers</v-list-item-title>
         </v-list-item>
 
         <v-divider></v-divider>

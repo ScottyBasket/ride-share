@@ -17,6 +17,11 @@ objection.Model.knex(knex);
 const User = require("./models/User");
 const Vehicle = require("./models/Vehicle");
 const Location = require("./models/Location");
+const Types = require("./models/VehicleType");
+const Driver = require("./models/Driver");
+const Ride = require("./models/Ride");
+const State = require("./models/State");
+const Passenger = require("./models/Passenger");
 
 // Hapi
 const Joi = require("@hapi/joi"); // Input validation
@@ -93,6 +98,65 @@ async function init() {
         },
 
         {
+            method: "POST",
+            path: "/becomeDriver",
+            config: {
+                description: "Apply to become a driver",
+                validate: {
+                    payload: Joi.object({
+                        id:Joi.number().integer(),
+                        licenseNumber: Joi.string().required(),
+                        licenseState: Joi.string().max(2).required(),
+                        userId: Joi.number().integer(),
+                    }),
+                }
+            },
+            handler: async(request, h) => {
+                const existingDriver = await Driver.query()
+                    .where("userId", request.payload.userId)
+                    .first();
+                if (existingDriver) {
+                    return {
+                        ok: false,
+                        msge: `You are already a driver.`,
+                    };
+                }
+
+                const newDriver = await Driver.query().insert({
+                    licenseNumber: request.payload.licenseNumber,
+                    licenseState: request.payload.licenseState,
+                    userId: request.payload.userId,
+                });
+
+                if (newDriver) {
+                    return {
+                        ok: true,
+                        msge: `You are now a driver.`,
+                    };
+                } else {
+                    return {
+                        ok: false,
+                        msge: `You cannot become a driver`,
+                    };
+                }
+            },
+        },
+
+        {
+            method: "POST",
+            path: "/becomePassenger/{rideId}",
+            config: {
+                description: "Apply to become a passenger",
+            },
+            handler: async(request, h) => {
+              return Passenger.query().insert({
+                  rideId: request.params.rideId,
+                  userId: request.payload.userId,
+              }).first();
+            },
+        },
+
+        {
             method: "GET",
             path: "/accounts",
             config: {
@@ -116,12 +180,147 @@ async function init() {
 
         {
             method: "GET",
+            path: "/rides",
+            config: {
+                description: "Retrieve all rides with more info",
+            },
+            handler: async (request, h) => {
+                return await Ride.query()
+                  .withGraphFetched('[vehicle, driver.users]')
+            },
+        },
+
+        {
+            method: "GET",
+            path: "/joinRides",
+            config: {
+                description: "Retrieve all rides with more info",
+            },
+            handler: async (request, h) => {
+                return await Ride.query()
+                  .withGraphFetched('[vehicle, tolocations, locations, user, driver]')
+            },
+        },
+
+        {
+            method: "GET",
+            path: "/drivers",
+            config: {
+                description: "Retrieve all rides with more info",
+            },
+            handler: async (request, h) => {
+                return await Driver.query()
+                  .withGraphFetched('users')
+            },
+        },
+
+        {
+            method: "GET",
+            path: "/passengers",
+            config: {
+                description: "Retrieve all rides with more info",
+            },
+            handler: async (request, h) => {
+                return await Passenger.query()
+                  .withGraphFetched('[users, rides.[locations, tolocations]]')
+            },
+        },
+
+        {
+            method: "GET",
+            path: "/types",
+            config: {
+                description: "Retrieve all vehicle types",
+            },
+            handler: (request, h) => {
+                return Types.query();
+            },
+        },
+
+
+        {
+            method: "GET",
             path: "/locations",
             config: {
                 description: "Retrieve all locations",
             },
             handler: (request, h) => {
                 return Location.query();
+            },
+        },
+
+        {
+            method: "DELETE",
+            path: "/drivers/{id}",
+            config: {
+                description: "Delete a driver",
+            },
+            handler: (request, h) => {
+                return Driver.query()
+                    .deleteById(request.params.id)
+                    .then((rowsDeleted) => {
+                        if (rowsDeleted === 1) {
+                            return {
+                                ok: true,
+                                msge: `Deleted driver with ID '${request.params.id}'`,
+                            };
+                        } else {
+                            return {
+                                ok: false,
+                                msge: `Couldn't delete driver with ID '${request.params.id}'`,
+                            };
+                        }
+                    });
+            },
+        },
+
+        {
+            method: "DELETE",
+            path: "/rides/{id}",
+            config: {
+                description: "Delete a ride",
+            },
+            handler: (request, h) => {
+                return Ride.query()
+                    .deleteById(request.params.id)
+                    .then((rowsDeleted) => {
+                        if (rowsDeleted === 1) {
+                            return {
+                                ok: true,
+                                msge: `Deleted ride with ID '${request.params.id}'`,
+                            };
+                        } else {
+                            return {
+                                ok: false,
+                                msge: `Couldn't delete ride with ID '${request.params.id}'`,
+                            };
+                        }
+                    });
+            },
+        },
+
+        {
+            method: "DELETE",
+            path: "/types/{id}",
+            config: {
+                description: "Delete an types",
+            },
+            handler: (request, h) => {
+                return Types.query()
+                    .deleteById(request.params.id)
+                    .then((rowsDeleted) => {
+                        if (rowsDeleted === 1) {
+                            return {
+                                ok: true,
+                                msge: `Deleted vehicle type with ID '${request.params.id}'`,
+                            };
+                        } else {
+                            return {
+                                ok: false,
+                                msge: `Couldn't delete vehicle type with ID '${request.params.id}'`,
+                            };
+                        }
+                    });
             },
         },
 
@@ -182,7 +381,7 @@ async function init() {
                 description: "Delete a location",
             },
             handler: (request, h) => {
-                return Locations.query()
+                return Location.query()
                     .deleteById(request.params.id)
                     .then((rowsDeleted) => {
                         if (rowsDeleted === 1) {
